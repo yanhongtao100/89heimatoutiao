@@ -85,7 +85,6 @@ export default {
             this.$router.push('/home')
           }).catch(erro => {
             // 失败回调
-            // console.log(erro)
             this.$message('手机号或验证码错误')
           })
         }
