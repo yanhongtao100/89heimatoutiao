@@ -72,9 +72,22 @@ export default {
   },
   methods: {
     submitLogin () {
-      this.$refs.myFrom.validate(function (isOK) {
+      this.$refs.myFrom.validate(isOK => {
         if (isOK) {
           // 这里会掉接口去服务器查询数据
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginFrom
+          }).then((res) => {
+            // 成功回调
+            window.localStorage.setItem('user-token', res.data.data.token)
+            this.$router.push('/home')
+          }).catch(erro => {
+            // 失败回调
+            // console.log(erro)
+            this.$message('手机号或验证码错误')
+          })
         }
       })
     }
