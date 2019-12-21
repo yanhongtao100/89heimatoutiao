@@ -81,7 +81,7 @@ export default {
             data: this.loginFrom
           }).then((res) => {
             // 成功回调
-            window.localStorage.setItem('user-token', res.data.data.token)
+            window.localStorage.setItem('user-token', res.data.token)
             this.$router.push('/home')
           }).catch(erro => {
             // 失败回调
