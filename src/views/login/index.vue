@@ -83,9 +83,6 @@ export default {
             // 成功回调
             window.localStorage.setItem('user-token', res.data.token)
             this.$router.push('/home')
-          }).catch(erro => {
-            // 失败回调
-            this.$message('手机号或验证码错误')
           })
         }
       })
