@@ -26,9 +26,11 @@ axios.interceptors.response.use(function (response) {
       message = '手机或验证码错误'
       break
     case 401:
+      window.localStorage.removeItem('user-token')
       router.push('/login')
       break
     case 403:
+      window.localStorage.removeItem('user-token')
       router.push('/login')
       break
     case 507:
