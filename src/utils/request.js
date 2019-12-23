@@ -1,7 +1,7 @@
 import axios from 'axios'
 import router from '../router'
 import { Message } from 'element-ui'
-
+import JSONBig from 'json-bigint'
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 
 // 请求拦截
@@ -12,7 +12,10 @@ axios.interceptors.request.use(function (config) {
 }, function (erro) {
 
 })
-
+// 数据到达响应拦截器之前到的函数
+axios.defaults.transformResponse = [function (data) {
+  return JSONBig.parse(data)// 引用工具处理大数据
+}]
 // 响应拦截
 axios.interceptors.response.use(function (response) {
   // 成功执行
@@ -23,7 +26,7 @@ axios.interceptors.response.use(function (response) {
   let message = ''
   switch (status) {
     case 400:
-      message = '手机或验证码错误'
+      message = '数据错误'
       break
     case 401:
       window.localStorage.removeItem('user-token')
@@ -43,5 +46,6 @@ axios.interceptors.response.use(function (response) {
       break
   }
   Message({ type: 'warning', message: message })
+  return Promise.reject(erro)
 })
 export default axios
