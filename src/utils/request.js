@@ -14,7 +14,7 @@ axios.interceptors.request.use(function (config) {
 })
 // 数据到达响应拦截器之前到的函数
 axios.defaults.transformResponse = [function (data) {
-  return JSONBig.parse(data)// 引用工具处理大数据
+  return data ? JSONBig.parse(data) : {}// 引用工具处理大数据
 }]
 // 响应拦截
 axios.interceptors.response.use(function (response) {

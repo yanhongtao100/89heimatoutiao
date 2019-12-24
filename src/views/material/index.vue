@@ -6,7 +6,7 @@
       </template>
     </bread-crumb>
     <el-row type="flex" justify="end">
-      <el-upload :http-request="uploadImg" :action="sd">
+      <el-upload :http-request="uploadImg" action>
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
     </el-row>
@@ -16,8 +16,8 @@
           <el-card v-for="item in list" :key="item.id" class="img-card">
             <img :src="item.url" alt="" />
             <el-row type="flex" justify="space-around" class="operate">
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-delete-solid"></i>
+              <i class="el-icon-star-on" @click=" collectOrCancel (item)" :style="{ color:item.is_collected?'red':''}"></i>
+              <i class="el-icon-delete-solid" @click="delMaterial (item.id)"></i>
             </el-row>
           </el-card>
         </div>
@@ -60,6 +60,27 @@ export default {
     }
   },
   methods: {
+    delMaterial (id) {
+      this.$confirm('确定？').then(() => {
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(() => {
+          this.getAllMeteriar()
+        })
+      })
+    },
+    collectOrCancel (item) {
+      this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(() => {
+        this.getAllMeteriar()
+      })
+    },
     uploadImg (params) {
       this.loading = true
       let from = new FormData()
@@ -118,6 +139,9 @@ export default {
       background-color: #f4f5f6;
       bottom: 0;
       left: 0;
+      i{
+        cursor: pointer;
+      }
     }
   }
 }
