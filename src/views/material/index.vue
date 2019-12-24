@@ -6,7 +6,7 @@
       </template>
     </bread-crumb>
     <el-row type="flex" justify="end">
-      <el-upload :http-request="uploadImg" :action="sd">
+      <el-upload :http-request="uploadImg" action>
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
     </el-row>
@@ -16,8 +16,8 @@
           <el-card v-for="item in list" :key="item.id" class="img-card">
             <img :src="item.url" alt="" />
             <el-row type="flex" justify="space-around" class="operate">
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-delete-solid"></i>
+              <i class="el-icon-star-on" @click="collectOrCancel(item)" :style="{color:item.is_collected?'red':''}"></i>
+              <i class="el-icon-delete-solid" @click="delMaterial(item.id)"></i>
             </el-row>
           </el-card>
         </div>
@@ -60,6 +60,24 @@ export default {
     }
   },
   methods: {
+    // 删除图片接口
+    delMaterial (id) {
+      this.$confirm('确定？').then(() => {
+
+      })
+    },
+    // 调用收藏或取消收藏接口
+    collectOrCancel (params) {
+      this.$axios({
+        url: `/user/images/${params.id}`,
+        method: 'put',
+        data: {
+          collect: !params.is_collected
+        }
+      }).then(() => {
+        this.getAllMeteriar()
+      })
+    },
     uploadImg (params) {
       this.loading = true
       let from = new FormData()
@@ -103,7 +121,7 @@ export default {
   justify-content: space-around;
   .img-card {
     width: 200px;
-    height: 240px;
+    height: 180px;
     font-size: 20px;
     border-radius: 15px 15px 0 0;
     position: relative;
@@ -114,10 +132,15 @@ export default {
     }
     .operate {
       width: 100%;
+      height: 30px;
       position: absolute;
       background-color: #f4f5f6;
       bottom: 0;
       left: 0;
+      i{
+        line-height: 30px;
+        cursor: pointer;
+      }
     }
   }
 }
