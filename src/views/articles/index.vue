@@ -70,7 +70,7 @@
 </el-col>
 <el-col :span="6">
     <el-row type="flex" class="right" justify="end">
-    <span> <i class="el-icon-edit"></i> 修改</span>
+    <span @click="toModify(item.id)"> <i class="el-icon-edit" ></i> 修改</span>
     <span  @click="delArticles(item.id)"> <i class="el-icon-delete"></i> 删除</span>
     </el-row >
     </el-col>
@@ -140,7 +140,11 @@ export default {
       }
     }
   },
+
   methods: {
+    toModify (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     delArticles (id) {
       // 删除文章
       this.$confirm('确定？').then(result => {

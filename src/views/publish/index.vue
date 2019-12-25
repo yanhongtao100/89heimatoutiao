@@ -31,8 +31,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="">
-        <el-button type="primary" @click="publishArticle">发布</el-button>
-        <el-button @click="publishArticle">存入草稿</el-button>
+        <el-button type="primary" @click="publishArticle(false)">发布</el-button>
+        <el-button @click="publishArticle(true)">存入草稿</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -69,17 +69,76 @@ export default {
         this.channels = result.data.channels
       })
     },
-    publishArticle () {
+    publishArticle (draft) {
       // 发布文章
-      this.$refs.publishForm.validate(function (isOk) {
+      this.$refs.publishForm.validate((isOk) => {
         if (isOk) {
-          console.log('ok')
+          let { articleId } = this.$route.params
+          this.$axios({
+            method: articleId ? 'put' : 'post',
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            params: { draft },
+            data: this.formData
+          }).then(() => {
+            this.$router.push('/home/articles')
+          })
+          // if (articleId) {
+          //   this.$axios({
+          //     url: `/articles/${articleId}`,
+          //     method: 'put',
+          //     params: { draft },
+          //     data: this.formData
+          //   }).then(() => {
+          //     this.$router.push('/home/articles')
+          //   })
+          // } else {
+          //   this.$axios({
+          //     url: '/articles',
+          //     method: 'post',
+          //     params: {
+          //       draft
+          //     },
+          //     data: this.formData
+
+          //   }).then(() => {
+          //     this.$router.push('/home/articles')
+          //   })
+          // }
         }
       })
+    },
+    getArticleById (articleId) {
+      console.log(articleId)
+
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then((result) => {
+        this.formData = result.data
+      })
+    }
+  },
+  watch: {
+    $route: function (to, from) {
+      if (Object.keys(to.params).length) {
+
+      } else {
+        this.formData = {// 接收表单验证对象
+          title: '', // 标题
+          content: '', // 内容
+          cover: {// 图片
+            type: 0, // 图片类型，-1,0，1-1,3-3，分别代表自动，无图，1-1张，3-3张
+            images: [ ]// 存储的图片地址
+          }
+        }
+      }
     }
   },
   created () {
     this.gteChannels()
+    let { articleId } = this.$route.params
+    if (articleId) {
+      this.getArticleById(articleId)
+    }
   }
 }
 </script>
