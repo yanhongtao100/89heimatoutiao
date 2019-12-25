@@ -124,7 +124,7 @@ export default {
   justify-content: space-around;
   .img-card {
     width: 200px;
-    height: 240px;
+    height: 180px;
     font-size: 20px;
     border-radius: 15px 15px 0 0;
     position: relative;
@@ -135,12 +135,14 @@ export default {
     }
     .operate {
       width: 100%;
+      height: 30px;
       position: absolute;
       background-color: #f4f5f6;
       bottom: 0;
       left: 0;
       i{
         cursor: pointer;
+
       }
     }
   }
