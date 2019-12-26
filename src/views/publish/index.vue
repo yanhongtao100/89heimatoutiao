@@ -10,9 +10,9 @@
         <el-input style="width:60%" v-model="formData.title"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <quill-editor type="textarea" :rows="4" v-model="formData.content"></quill-editor>
+        <quill-editor style="height:300px" type="textarea" :rows="4" v-model="formData.content"></quill-editor>
       </el-form-item>
-      <el-form-item label="封面" prop="type">
+      <el-form-item label="封面" style="margin-top:100px" prop="type">
         <el-radio-group v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
@@ -82,28 +82,6 @@ export default {
           }).then(() => {
             this.$router.push('/home/articles')
           })
-          // if (articleId) {
-          //   this.$axios({
-          //     url: `/articles/${articleId}`,
-          //     method: 'put',
-          //     params: { draft },
-          //     data: this.formData
-          //   }).then(() => {
-          //     this.$router.push('/home/articles')
-          //   })
-          // } else {
-          //   this.$axios({
-          //     url: '/articles',
-          //     method: 'post',
-          //     params: {
-          //       draft
-          //     },
-          //     data: this.formData
-
-          //   }).then(() => {
-          //     this.$router.push('/home/articles')
-          //   })
-          // }
         }
       })
     },
@@ -120,7 +98,7 @@ export default {
   watch: {
     $route: function (to, from) {
       if (Object.keys(to.params).length) {
-
+        this.getArticleById(to.params.articleId)
       } else {
         this.formData = {// 接收表单验证对象
           title: '', // 标题
@@ -131,7 +109,18 @@ export default {
           }
         }
       }
+    },
+    'formData.cover.type': function () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        // 无图，自动
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) { // 单图模式
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) { // 三图模式
+        this.formData.cover.images = ['', '', '']
+      }
     }
+
   },
   created () {
     this.gteChannels()
