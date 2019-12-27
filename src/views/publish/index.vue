@@ -13,14 +13,14 @@
         <quill-editor style="height:300px" type="textarea" :rows="4" v-model="formData.content"></quill-editor>
       </el-form-item>
       <el-form-item label="封面" style="margin-top:100px" prop="type">
-        <el-radio-group v-model="formData.cover.type">
+        <el-radio-group @change="changeType" v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
       </el-form-item>
-      <cover-image :list="formData.cover.images"></cover-image>
+      <cover-image :list="formData.cover.images" @clickOneImg="receiveImg"></cover-image>
       <el-form-item label="频道" prop="channel_id">
         <el-select v-model="formData.channel_id">
           <el-option
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -94,6 +95,26 @@ export default {
       }).then((result) => {
         this.formData = result.data
       })
+    },
+    changeType () { // 切换类型触发
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        // 无图，自动
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) { // 单图模式
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) { // 三图模式
+        this.formData.cover.images = ['', '', '']
+      }
+    },
+    receiveImg (img, index) {
+      this.formData.cover.images[index] = img
+      // 数组变成新数组就会触发响应式的更新
+      this.formData.cover.images.map(function (item, i) {
+        if (i === index) {
+          return img
+        }
+        return item
+      })
     }
   },
   watch: {
@@ -110,17 +131,17 @@ export default {
           }
         }
       }
-    },
-    'formData.cover.type': function () {
-      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
-        // 无图，自动
-        this.formData.cover.images = []
-      } else if (this.formData.cover.type === 1) { // 单图模式
-        this.formData.cover.images = ['']
-      } else if (this.formData.cover.type === 3) { // 三图模式
-        this.formData.cover.images = ['', '', '']
-      }
     }
+    // 'formData.cover.type': function () {
+    //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+    //     // 无图，自动
+    //     this.formData.cover.images = []
+    //   } else if (this.formData.cover.type === 1) { // 单图模式
+    //     this.formData.cover.images = ['']
+    //   } else if (this.formData.cover.type === 3) { // 三图模式
+    //     this.formData.cover.images = ['', '', '']
+    //   }
+    // }
 
   },
   created () {

@@ -71,9 +71,7 @@ export default {
       }).then(result => {
         this.list = result.data.results
         this.page.totle = result.data.total_count
-        window.setTimeout(() => {
-          this.loading = false
-        }, 2000)
+        this.loading = false
       })
     },
     formatterBool (row, column, cellValue, index) {
