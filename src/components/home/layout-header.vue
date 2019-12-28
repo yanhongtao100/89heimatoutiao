@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'// 公共实例
 export default {
   data () {
     return {
@@ -29,12 +30,9 @@ export default {
     }
   },
   created () {
-    // 查询数据
-    this.$axios({
-      url: '/user/profile'
-      //   headers参数
-    }).then(result => {
-      this.userInfo = result.data // 获取用户个人信息
+    this.getUserInfo()
+    eventBus.$on('updateUserInfoSuccess', () => {
+      this.getUserInfo()
     })
   },
   methods: {
@@ -43,6 +41,15 @@ export default {
         window.localStorage.removeItem('user-token')
         this.$router.replace('/login')
       }
+    },
+    getUserInfo () {
+      // 查询数据
+      this.$axios({
+        url: '/user/profile'
+      //   headers参数
+      }).then(result => {
+        this.userInfo = result.data // 获取用户个人信息
+      })
     }
   }
 }
