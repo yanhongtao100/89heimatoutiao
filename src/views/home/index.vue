@@ -2,8 +2,8 @@
 
 <el-container>
 
-  <el-aside style="min-height:100vh;background:#353b4e;width:230px">
-    <layout-aside>
+  <el-aside :style="{width:collsapse ? '60px':'230px'}" style="transition:all 0.3s;min-height:100vh;background:#353b4e">
+    <layout-aside :collsapse="collsapse">
     </layout-aside>
   </el-aside>
   <el-container>
@@ -18,9 +18,18 @@
 </template>
 
 <script>
-
+import evenbus from '../../utils/eventBus'
 export default {
-
+  data () {
+    return {
+      collsapse: false
+    }
+  },
+  created () {
+    evenbus.$on('changeCollapse', () => {
+      this.collsapse = !this.collsapse
+    })
+  }
 }
 </script>
 

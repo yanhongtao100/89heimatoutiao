@@ -1,7 +1,7 @@
 <template>
     <el-row type="flex" justify="space-between" class="layout-header" align="middle">
         <el-col :span="6" class="left">
-            <i class="el-icon-s-fold"></i>
+            <i @click="collaspseOrOpen" :class="{'el-icon-s-unfold':collaspse,'el-icon-s-fold':!collaspse}"></i>
             <span class="title">江苏传智播客教育科技股份有限公司</span>
         </el-col>
         <el-col :span="4" class="right">
@@ -26,7 +26,8 @@ export default {
   data () {
     return {
       userInfo: {},
-      defaltImg: require('../../assets/img/avatar.jpg')
+      defaltImg: require('../../assets/img/avatar.jpg'),
+      collaspse: false// 是否折叠
     }
   },
   created () {
@@ -50,6 +51,10 @@ export default {
       }).then(result => {
         this.userInfo = result.data // 获取用户个人信息
       })
+    },
+    collaspseOrOpen () {
+      this.collaspse = !this.collaspse
+      eventBus.$emit('changeCollapse')
     }
   }
 }
@@ -65,6 +70,9 @@ export default {
             color:#2c3e50;
             margin-left: 5px;
             font-size: 16px;
+        }
+        i{
+          font-size: 20px;
         }
     }
     .right{
