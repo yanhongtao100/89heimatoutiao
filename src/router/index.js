@@ -41,6 +41,10 @@ const routes = [
     {
       path: 'account',
       component: () => import('../views/account')
+    },
+    {
+      path: '*',
+      component: () => import('../views/404')
     }]
   },
   {
